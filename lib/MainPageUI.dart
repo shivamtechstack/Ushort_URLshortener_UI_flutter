@@ -3,38 +3,75 @@ import 'package:flutter/material.dart';
 class MainPageUI extends StatelessWidget{
 const MainPageUI({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Ushort",
-        style: TextStyle(color: Colors.white,
-        fontSize: 34,
-        ),),
-        backgroundColor: Colors.blue,
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      title: Text(
+        "Ushort",
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 34,
+        ),
       ),
-      body: Padding(padding: const EdgeInsets.all(20.0),
-          child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-            children: [Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                editTextField("Enter Url"),
-                SizedBox(width: 16),
-                editTextField("Custom Short Code"),
-              ],
+      backgroundColor: Colors.blue,
+    ),
+    body: Padding(
+      padding: EdgeInsets.fromLTRB(20, 70, 20, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center, // Ensures content is centered
+        children: [
+          Center( // Centers the container horizontally
+            child: IntrinsicWidth(
+              child: Container(
+                padding: EdgeInsets.all(16),
+                margin: EdgeInsets.only(bottom: 16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      blurRadius: 8,
+                      spreadRadius: 2,
+                      offset: Offset(0, 4),
+                    )
+                  ],
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min, // Shrinks width to fit content
+                  children: [
+                    textView("Enter the URL to shorten"),
+                    SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        editTextField("Place your long URL here..", 350),
+                        SizedBox(width: 16),
+                        editTextField("Custom code (Optional)", 220),
+                      ],
+                    )
+                  ],
+                ),
+              ),
             ),
-              SizedBox(height: 16),
-              button()
-            ],
+          ),
+          SizedBox(height: 10),
+          button(),
+          SizedBox(height: 12),
+          warningText("Warning"),
+          SizedBox(height: 16),
+          textView("Shortened URL"),
+        ],
       ),
-      ),
-    );
-  }
+    ),
+  );
+}
 
-Widget editTextField(String hint) {
+
+Widget editTextField(String hint, double receivedWidth) {
   return Container(
-    width: 300, // Width
+    width: receivedWidth, // Width
     height: 50, // Height
     padding: EdgeInsets.symmetric(horizontal: 10), // Add padding
     decoration: BoxDecoration(
@@ -58,9 +95,9 @@ Widget button(){
        shape: RoundedRectangleBorder(
          borderRadius: BorderRadius.circular(5),
        ),
-     ), child: Text("Shorten Url", style: TextStyle(fontSize: 16,
+     ), child: Text("Shorten URL", style: TextStyle(fontSize: 16,
     color: Colors.white),
-    ),
+    )
     );
 }
 
