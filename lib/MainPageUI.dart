@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:ushort/services/url_shortener_service.dart';
 import 'package:http/http.dart' as http;
 
@@ -62,70 +63,107 @@ class _MainPageUIState extends State<MainPageUI>{
     });
   }
 
-@override
-Widget build(BuildContext context) {
-  return Scaffold(
-    appBar: AppBar(
-      title: Text(
-        "Ushort",
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 34,
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "Ushort",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 34,
+          ),
         ),
+        backgroundColor: Colors.blue,
       ),
-      backgroundColor: Colors.blue,
-    ),
-    body: Padding(
-      padding: EdgeInsets.fromLTRB(20, 70, 20, 0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center, // Ensures content is centered
-        children: [
-          Center( // Centers the container horizontally
-            child: IntrinsicWidth(
-              child: Container(
-                padding: EdgeInsets.all(16),
-                margin: EdgeInsets.only(bottom: 16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      blurRadius: 8,
-                      spreadRadius: 2,
-                      offset: Offset(0, 4),
-                    )
-                  ],
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min, // Shrinks width to fit content
-                  children: [
-                    textView("Enter the URL to shorten"),
-                    SizedBox(height: 16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        editTextField("Place your long URL here..",_originalUrlController, 350),
-                        SizedBox(width: 16),
-                        editTextField("Custom code (Optional)",_customCodeController, 220),
+      body: SingleChildScrollView( // Prevent overflow
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(20, 70, 20, 20), // Add bottom padding
+          child: Column(
+            mainAxisSize: MainAxisSize.min, // Avoid infinite height issue
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Center(
+                child: IntrinsicWidth(
+                  child: Container(
+                    padding: EdgeInsets.all(16),
+                    margin: EdgeInsets.only(bottom: 16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          blurRadius: 8,
+                          spreadRadius: 2,
+                          offset: Offset(0, 4),
+                        )
                       ],
-                    )
-                  ],
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        textView("Enter the URL to shorten"),
+                        SizedBox(height: 16),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            editTextField("Place your long URL here..", _originalUrlController, 350),
+                            SizedBox(width: 16),
+                            editTextField("Custom code (Optional)", _customCodeController, 220),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
                 ),
               ),
+              SizedBox(height: 10),
+              button(),
+              SizedBox(height: 12),
+              warningText(_errorMessage),
+              SizedBox(height: 16),
+
+              Center( // Ensures URL is in the center
+                child: textView(_shortenedURL, showIcon: true),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+// Updated textView for copying functionality
+  Widget textView(String label, {bool showIcon = false}) {
+    return Align( // Align text to center
+      alignment: Alignment.center,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center, // Center row contents
+        children: [
+          SelectableText(
+            label,
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 18,
             ),
           ),
-          SizedBox(height: 10),
-          button(),
-          SizedBox(height: 12),
-          warningText(_errorMessage),
-          SizedBox(height: 16),
-          textView(_shortenedURL,showIcon: true),
+          if (showIcon && label.isNotEmpty) ...[
+            SizedBox(width: 10),
+            GestureDetector(
+              onTap: () {
+                Clipboard.setData(ClipboardData(text: label));
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Copied to clipboard')),
+                );
+              },
+              child: Icon(Icons.copy, color: Colors.blue),
+            ),
+          ],
         ],
       ),
-    ),
-  );
-}
+    );
+  }
 
 
 Widget editTextField(String hint, TextEditingController controller,double receivedWidth) {
@@ -172,25 +210,5 @@ Widget warningText(String warningLabel){
             fontSize: 16)
         )
     );
-}
-
-Widget textView(String label, {bool showIcon = false}) {
-  return Container(
-    child: Row(
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 18,
-          ),
-        ),
-        if (showIcon && label.isNotEmpty) ...[
-          SizedBox(width: 10),
-          Icon(Icons.copy),
-        ],
-      ],
-    ),
-  );
 }
 }
