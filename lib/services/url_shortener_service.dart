@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class UrlShortenerService {
-  final String _baseURL = "https://ushort-ldis.onrender.com";
+  final String _baseURL = "https://localhost:8080";
 
 
   Future<String?> shortenUrl(String originalUrl, {String? customShortCode}) async {

@@ -21,7 +21,7 @@ class _MainPageUIState extends State<MainPageUI>{
 
   void testRender() async {
     try {
-      final response = await http.get(Uri.parse("https://ushort-ldis.onrender.com/"));
+      final response = await http.get(Uri.parse("https://localhost:8080/"));
       print("Render Response Status: ${response.statusCode}");
       print("Render Response Body: ${response.body}");
     } catch (e) {
@@ -31,7 +31,7 @@ class _MainPageUIState extends State<MainPageUI>{
 
   void testPost() async {
     try {
-      final response = await http.post(Uri.parse("https://ushort-ldis.onrender.com/shorten"));
+      final response = await http.post(Uri.parse("https://localhost:8080/shorten"));
       print("Post Response Status: ${response.statusCode}");
       print("Post Response Body: ${response.body}");
     } catch (e) {
@@ -197,9 +197,7 @@ Widget button(){
        ),
      ), child: Text("Shorten URL", style: TextStyle(fontSize: 16,
     color: Colors.white),
-    )
-    )
-    );
+    )));
 }
 
 Widget warningText(String warningLabel){
@@ -208,7 +206,6 @@ Widget warningText(String warningLabel){
           style: TextStyle(
             color: Colors.red,
             fontSize: 16)
-        )
-    );
+        ));
 }
 }
